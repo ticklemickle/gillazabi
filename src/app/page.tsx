@@ -60,7 +60,7 @@ export default function HomePage() {
             className="sr-only peer"
             onChange={handleChange}
           />
-          <div className="py-3 bg-gray-100 rounded-xl text-center font-medium peer-checked:bg-blue-600 peer-checked:text-white cursor-pointer">
+          <div className="py-3 bg-gray-100 rounded-xl text-center font-medium peer-checked:bg-main-color peer-checked:text-white cursor-pointer text-[#000]">
             {v}
           </div>
         </label>
@@ -70,10 +70,10 @@ export default function HomePage() {
 
   const renderSelect = (name: string, options: string[], label: string) => (
     <div>
-      <label className="block font-semibold mb-1">{label}</label>
+      <label className="block font-semibold mb-1 text-[#000]">{label}</label>
       <select
         name={name}
-        className="w-full border rounded-xl py-3 px-4"
+        className="w-full border rounded-xl py-3 px-4 text-[#000]"
         value={formData[name as keyof typeof formData]}
         onChange={handleChange}
         required
@@ -91,8 +91,24 @@ export default function HomePage() {
   return (
     <main className="bg-gray-50 px-4 py-6 min-h-screen">
       <div className="max-w-md mx-auto bg-white rounded-2xl shadow-lg p-6 space-y-6">
-        <h1 className="text-2xl font-bold text-center">
-          🏠 부동산 정책 맞춤 조회
+        <div className="min-h-screen bg-white p-6">
+          <h1 className="text-2xl font-bold text-[#000]">Tailwind 테스트</h1>
+
+          <div className="bg-black text-white p-4 rounded mt-4">
+            ✅ 기본 색상 (bg-black) — 작동함
+          </div>
+
+          <div className="bg-primary text-white p-4 rounded mt-4">
+            ✅ 커스텀 색상 (bg-primary) — 작동해야 정상
+          </div>
+
+          <div className="bg-main-color text-white p-4 rounded mt-4">
+            ✅ 커스텀 색상 (bg-main-color) — 이것도 작동해야 함
+          </div>
+        </div>
+
+        <h1 className="text-2xl font-bold text-center text-[#000]">
+          🏠 2024 부동산 정책 맞춤 조회
         </h1>
         <form className="space-y-5" onSubmit={handleSubmit}>
           {renderSelect(
@@ -127,7 +143,7 @@ export default function HomePage() {
           <div className="pt-4">
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white font-semibold py-3 rounded-xl hover:bg-blue-700 transition"
+              className="w-full bg-main-color text-white font-semibold py-3 rounded-xl hover:bg-black/90 transition"
             >
               🔍 나에게 맞는 정책 보기
             </button>
