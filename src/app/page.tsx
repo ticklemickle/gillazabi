@@ -1,103 +1,139 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+import { doc, setDoc } from "firebase/firestore";
+import { FirebaseDB } from "@/lib/firebase";
+import { generateHashedKey } from "@/components/generateHashKEy";
+
+export default function HomePage() {
+  const router = useRouter();
+
+  const [formData, setFormData] = useState({
+    birthYear: "",
+    houseCount: "",
+    married: "",
+    children: "",
+    income: "",
+    planBuy: "",
+    price: "",
+    loan: "",
+    liveIn: "",
+    moveIn: "",
+    jeonseLoan: "",
+    loanPurpose: "",
+  });
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const key = generateHashedKey();
+
+    try {
+      await setDoc(doc(FirebaseDB, "reports", key), {
+        ...formData,
+        createdAt: new Date().toISOString(),
+      });
+      router.push(`/result?key=${key}`);
+    } catch (error) {
+      console.error("문서 저장 실패:", error);
+      alert("데이터 저장 중 오류가 발생했습니다.");
+    }
+  };
+
+  const renderRadio = (name: string, options: string[]) => (
+    <div className="flex gap-3">
+      {options.map((v) => (
+        <label className="flex-1 block" key={v}>
+          <input
+            type="radio"
+            name={name}
+            value={v}
+            className="sr-only peer"
+            onChange={handleChange}
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          <div className="py-3 bg-gray-100 rounded-xl text-center font-medium peer-checked:bg-blue-600 peer-checked:text-white cursor-pointer">
+            {v}
+          </div>
+        </label>
+      ))}
     </div>
+  );
+
+  const renderSelect = (name: string, options: string[], label: string) => (
+    <div>
+      <label className="block font-semibold mb-1">{label}</label>
+      <select
+        name={name}
+        className="w-full border rounded-xl py-3 px-4"
+        value={formData[name as keyof typeof formData]}
+        onChange={handleChange}
+        required
+      >
+        <option value="">선택</option>
+        {options.map((v) => (
+          <option key={v} value={v}>
+            {v}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+
+  return (
+    <main className="bg-gray-50 px-4 py-6 min-h-screen">
+      <div className="max-w-md mx-auto bg-white rounded-2xl shadow-lg p-6 space-y-6">
+        <h1 className="text-2xl font-bold text-center">
+          🏠 부동산 정책 맞춤 조회
+        </h1>
+        <form className="space-y-5" onSubmit={handleSubmit}>
+          {renderSelect(
+            "birthYear",
+            ["2000년 이후", "1990년대", "1980년대", "1970년대"],
+            "출생연도"
+          )}
+          {renderRadio("houseCount", ["무주택", "1주택", "2주택 이상"])}
+          {renderRadio("married", ["기혼", "미혼"])}
+          {renderRadio("children", ["있음", "없음"])}
+          {renderSelect(
+            "income",
+            ["5,000만원 미만", "1억원 미만", "1억원 이상"],
+            "연소득 (세전)"
+          )}
+          {renderRadio("planBuy", ["있음", "없음"])}
+          {renderSelect(
+            "price",
+            ["6억 미만", "6억 ~ 9억", "9억 초과"],
+            "희망 매매가"
+          )}
+          {renderRadio("loan", ["예", "아니오"])}
+          {renderRadio("liveIn", ["예", "아니오"])}
+          {renderRadio("moveIn", ["예", "아니오"])}
+          {renderRadio("jeonseLoan", ["예", "아니오"])}
+          {renderSelect(
+            "loanPurpose",
+            ["주택 구입", "전세 보증금", "생활자금", "기타"],
+            "대출의 주요 목적"
+          )}
+
+          <div className="pt-4">
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white font-semibold py-3 rounded-xl hover:bg-blue-700 transition"
+            >
+              🔍 나에게 맞는 정책 보기
+            </button>
+          </div>
+        </form>
+      </div>
+    </main>
   );
 }
