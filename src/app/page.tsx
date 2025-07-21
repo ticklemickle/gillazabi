@@ -91,24 +91,8 @@ export default function HomePage() {
   return (
     <main className="bg-gray-50 px-4 py-6 min-h-screen">
       <div className="max-w-md mx-auto bg-white rounded-2xl shadow-lg p-6 space-y-6">
-        <div className="min-h-screen bg-white p-6">
-          <h1 className="text-2xl font-bold text-[#000]">Tailwind 테스트</h1>
-
-          <div className="bg-black text-white p-4 rounded mt-4">
-            ✅ 기본 색상 (bg-black) — 작동함
-          </div>
-
-          <div className="bg-primary text-white p-4 rounded mt-4">
-            ✅ 커스텀 색상 (bg-primary) — 작동해야 정상
-          </div>
-
-          <div className="bg-main-color text-white p-4 rounded mt-4">
-            ✅ 커스텀 색상 (bg-main-color) — 이것도 작동해야 함
-          </div>
-        </div>
-
         <h1 className="text-2xl font-bold text-center text-[#000]">
-          🏠 2024 부동산 정책 맞춤 조회
+          부동산 정책 맞춤 조회
         </h1>
         <form className="space-y-5" onSubmit={handleSubmit}>
           {renderSelect(

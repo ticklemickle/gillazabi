@@ -1,14 +1,42 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}", // ✅ app은 src 하위에 존재
-    "./src/components/**/*.{js,ts,jsx,tsx}", // ✅ 공통 컴포넌트가 이 경로일 경우
-  ],
+  content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["MyCustomFont", "ui-sans-serif", "system-ui"],
+      },
+      fontWeight: {
+        light: "310",
+        base: "320",
+        normal: "330",
+        medium: "340",
+        bold: "350",
+      },
       colors: {
-        primary: "#00E28C", // 사용 중인 색상
-        "main-color": "#00E28C",
+        "custom-blue": "#014EFE",
+        "custom-yellow": "#FFFF02",
+        "custom-red": "#FE504F",
+
+        /* main color */
+        "main-color": "#1E3A8A",
+        "main-dark": "#163387",
+        "main-darkest": "#0a1d57",
+        "main-lightest": "#7092fa",
+        "main-light-shadow": "#cfdafa",
+      },
+
+      animation: {
+        "shake-once": "shake-once 0.4s ease-in-out",
+      },
+      keyframes: {
+        "shake-once": {
+          "0%, 100%": { transform: "translate(0, 0)" },
+          "20%": { transform: "translate(-5px, -5px)" },
+          "40%": { transform: "translate(5px, 5px)" },
+          "60%": { transform: "translate(-4px, 3px)" },
+          "80%": { transform: "translate(4px, -3px)" },
+        },
       },
     },
   },
