@@ -7,9 +7,15 @@ import { v4 as uuidv4 } from "uuid";
 import { doc, setDoc } from "firebase/firestore";
 import { FirebaseDB } from "@/lib/firebase";
 import { generateHashedKey } from "@/components/generateHashKEy";
+import CustomSelect from "@/components/CustomSelect";
+
+const birthOptions = ["2000년 이후", "1990년대", "1980년대", "1970년대"];
+type BirthYear = "" | (typeof birthOptions)[number];
 
 export default function HomePage() {
   const router = useRouter();
+
+  const [birth, setBirth] = useState<BirthYear | "">("");
 
   const [formData, setFormData] = useState({
     birthYear: "",
@@ -72,8 +78,8 @@ export default function HomePage() {
     <div>
       <label className="block font-semibold mb-1 text-[#000]">{label}</label>
       <select
+        className="w-full border rounded-xl py-3 px-4 text-[#000] hover:border-blue-500 hover:bg-gray-100"
         name={name}
-        className="w-full border rounded-xl py-3 px-4 text-[#000]"
         value={formData[name as keyof typeof formData]}
         onChange={handleChange}
         required
@@ -94,12 +100,23 @@ export default function HomePage() {
         <h1 className="text-2xl font-bold text-center text-[#000]">
           부동산 정책 맞춤 조회
         </h1>
+        <CustomSelect<BirthYear>
+          label="출생연도"
+          options={birthOptions}
+          value={birth}
+          onChange={(val) => {
+            setBirth(val);
+            setFormData((prev) => ({ ...prev, birthYear: val }));
+          }}
+        />
+
         <form className="space-y-5" onSubmit={handleSubmit}>
           {renderSelect(
             "birthYear",
             ["2000년 이후", "1990년대", "1980년대", "1970년대"],
             "출생연도"
           )}
+
           {renderRadio("houseCount", ["무주택", "1주택", "2주택 이상"])}
           {renderRadio("married", ["기혼", "미혼"])}
           {renderRadio("children", ["있음", "없음"])}
@@ -127,7 +144,7 @@ export default function HomePage() {
           <div className="pt-4">
             <button
               type="submit"
-              className="w-full bg-main-color text-white font-semibold py-3 rounded-xl hover:bg-black/90 transition"
+              className="w-full bg-main-color text-white font-semibold py-3 rounded-xl hover:bg-main-color/90 transition"
             >
               🔍 나에게 맞는 정책 보기
             </button>
