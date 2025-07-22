@@ -2,22 +2,32 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { v4 as uuidv4 } from "uuid";
-
 import { doc, setDoc } from "firebase/firestore";
 import { FirebaseDB } from "@/lib/firebase";
 import { generateHashedKey } from "@/components/generateHashKEy";
-import CustomSelect from "@/components/CustomSelect";
+import { selectFields } from "@/components/selection/formSchema";
+import { renderCustomSelect } from "@/components/selection/renderCustomSelect";
+import { getKSTTimestamp } from "@/constants/time";
 
-const birthOptions = ["2000년 이후", "1990년대", "1980년대", "1970년대"];
-type BirthYear = "" | (typeof birthOptions)[number];
+const fieldLabels: Record<string, string> = {
+  birthYear: "출생연도",
+  houseCount: "주택 수",
+  married: "결혼 여부",
+  children: "자녀 유무",
+  income: "연소득",
+  planBuy: "주택 구매 계획",
+  price: "희망 매매가",
+  loan: "현재 대출 여부",
+  liveIn: "매수 후 거주 여부",
+  moveIn: "2년 이내 입주 계획",
+  jeonseLoan: "전세자금 대출 여부",
+  loanPurpose: "대출의 주요 목적",
+};
 
 export default function HomePage() {
   const router = useRouter();
 
-  const [birth, setBirth] = useState<BirthYear | "">("");
-
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<Record<string, string>>({
     birthYear: "",
     houseCount: "",
     married: "",
@@ -39,14 +49,34 @@ export default function HomePage() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleSelectChange = (name: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const validateFormData = () => {
+    const emptyFields = Object.entries(formData)
+      .filter(([_, value]) => value === "")
+      .map(([key]) => fieldLabels[key] || key);
+
+    if (emptyFields.length > 0) {
+      alert(`다음 항목을 선택해주세요:\n- ${emptyFields.join("\n- ")}`);
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!validateFormData()) return; // 유효성 검사 실패 시 중단
+
     const key = generateHashedKey();
 
     try {
       await setDoc(doc(FirebaseDB, "reports", key), {
         ...formData,
-        createdAt: new Date().toISOString(),
+        createdAt: getKSTTimestamp(),
       });
       router.push(`/result?key=${key}`);
     } catch (error) {
@@ -55,91 +85,86 @@ export default function HomePage() {
     }
   };
 
-  const renderRadio = (name: string, options: string[]) => (
-    <div className="flex gap-3">
-      {options.map((v) => (
-        <label className="flex-1 block" key={v}>
-          <input
-            type="radio"
-            name={name}
-            value={v}
-            className="sr-only peer"
-            onChange={handleChange}
-          />
-          <div className="py-3 bg-gray-100 rounded-xl text-center font-medium peer-checked:bg-main-color peer-checked:text-white cursor-pointer text-[#000]">
-            {v}
-          </div>
-        </label>
-      ))}
-    </div>
-  );
-
-  const renderSelect = (name: string, options: string[], label: string) => (
-    <div>
-      <label className="block font-semibold mb-1 text-[#000]">{label}</label>
-      <select
-        className="w-full border rounded-xl py-3 px-4 text-[#000] hover:border-blue-500 hover:bg-gray-100"
-        name={name}
-        value={formData[name as keyof typeof formData]}
-        onChange={handleChange}
-        required
-      >
-        <option value="">선택</option>
+  const renderRadio = (name: string, options: string[], label?: string) => (
+    <div className="space-y-1">
+      {label && (
+        <label className="block font-semibold text-[#000] mb-1">{label}</label>
+      )}
+      <div className="flex gap-3">
         {options.map((v) => (
-          <option key={v} value={v}>
-            {v}
-          </option>
+          <label className="flex-1 block" key={v}>
+            <input
+              type="radio"
+              name={name}
+              value={v}
+              className="sr-only peer"
+              onChange={handleChange}
+            />
+            <div
+              className="py-3 bg-gray-100 rounded-xl text-center cursor-pointer text-[#000]
+             border border-transparent 
+             hover:border-main-color hover:text-main-color hover:font-semibold
+             peer-checked:border-main-color peer-checked:text-main-color peer-checked:font-semibold"
+            >
+              {v}
+            </div>
+          </label>
         ))}
-      </select>
+      </div>
     </div>
   );
 
   return (
     <main className="bg-gray-50 px-4 py-6 min-h-screen">
       <div className="max-w-md mx-auto bg-white rounded-2xl shadow-lg p-6 space-y-6">
-        <h1 className="text-2xl font-bold text-center text-[#000]">
-          부동산 정책 맞춤 조회
+        <h1 className="text-2xl font-semibold text-center text-[#000]">
+          🏠 부동산 정책 맞춤 조회
         </h1>
-        <CustomSelect<BirthYear>
-          label="출생연도"
-          options={birthOptions}
-          value={birth}
-          onChange={(val) => {
-            setBirth(val);
-            setFormData((prev) => ({ ...prev, birthYear: val }));
-          }}
-        />
+
+        <div className="space-y-4">
+          {renderCustomSelect(
+            "birthYear",
+            selectFields.birthYear,
+            formData.birthYear,
+            handleSelectChange
+          )}
+
+          {renderCustomSelect(
+            "income",
+            selectFields.income,
+            formData.income,
+            handleSelectChange
+          )}
+
+          {renderCustomSelect(
+            "price",
+            selectFields.price,
+            formData.price,
+            handleSelectChange
+          )}
+
+          {renderCustomSelect(
+            "loanPurpose",
+            selectFields.loanPurpose,
+            formData.loanPurpose,
+            handleSelectChange
+          )}
+        </div>
 
         <form className="space-y-5" onSubmit={handleSubmit}>
-          {renderSelect(
-            "birthYear",
-            ["2000년 이후", "1990년대", "1980년대", "1970년대"],
-            "출생연도"
+          {renderRadio(
+            "houseCount",
+            ["무주택", "1주택", "2주택 이상"],
+            "주택 수"
           )}
+          {renderRadio("married", ["기혼", "미혼"], "결혼 여부")}
+          {renderRadio("children", ["있음", "없음"], "자녀 유무")}
 
-          {renderRadio("houseCount", ["무주택", "1주택", "2주택 이상"])}
-          {renderRadio("married", ["기혼", "미혼"])}
-          {renderRadio("children", ["있음", "없음"])}
-          {renderSelect(
-            "income",
-            ["5,000만원 미만", "1억원 미만", "1억원 이상"],
-            "연소득 (세전)"
-          )}
-          {renderRadio("planBuy", ["있음", "없음"])}
-          {renderSelect(
-            "price",
-            ["6억 미만", "6억 ~ 9억", "9억 초과"],
-            "희망 매매가"
-          )}
-          {renderRadio("loan", ["예", "아니오"])}
-          {renderRadio("liveIn", ["예", "아니오"])}
-          {renderRadio("moveIn", ["예", "아니오"])}
-          {renderRadio("jeonseLoan", ["예", "아니오"])}
-          {renderSelect(
-            "loanPurpose",
-            ["주택 구입", "전세 보증금", "생활자금", "기타"],
-            "대출의 주요 목적"
-          )}
+          {renderRadio("planBuy", ["있음", "없음"], "주택 구매 계획")}
+          {renderRadio("loan", ["예", "아니오"], "현재 대출 여부")}
+          {renderRadio("liveIn", ["예", "아니오"], "매수 후 거주 여부")}
+          {renderRadio("moveIn", ["예", "아니오"], "2년 이내 입주 계획")}
+          {renderRadio("jeonseLoan", ["예", "아니오"], "전세자금 대출 여부")}
 
           <div className="pt-4">
             <button
