@@ -31,7 +31,7 @@ export const POLICIES: Policy[] = [
   },
   {
     id: "june27",
-    title: "6.27 대책 – 전입의무 강화",
+    title: "6.27 대책 - 전입의무 강화",
     description: "주담대 이용 시 6개월 내 전입 의무.",
     link: "https://www.koreatimes.co.kr/www/nation/2023/06/488_353481.html",
     tags: ["전입", "실거주", "대출"],

@@ -1,5 +1,4 @@
-// components/renderCustomSelect.tsx
-import CustomSelect from "./CustomSelect";
+import CustomSelect from "./CustomSelection";
 
 type SelectFieldConfig = {
   label: string;
@@ -13,7 +12,6 @@ export const renderCustomSelect = (
   onChange: (name: string, value: string) => void
 ) => (
   <CustomSelect
-    key={name}
     label={config.label}
     options={config.options}
     value={value}

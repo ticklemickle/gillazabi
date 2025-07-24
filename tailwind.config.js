@@ -23,7 +23,7 @@ module.exports = {
         "main-dark": "#163387",
         "main-darkest": "#0a1d57",
         "main-lightest": "#7092fa",
-        "main-light-shadow": "#cfdafa",
+        "main-light-shadow": "#f0f4ff",
       },
 
       animation: {
