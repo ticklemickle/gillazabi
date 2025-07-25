@@ -16,6 +16,7 @@ import { generateHashedKey } from "@/components/generateHashKEy";
 import { doc, setDoc } from "firebase/firestore";
 import { getKSTTimestamp } from "@/constants/time";
 import { FirebaseDB } from "@/lib/firebase";
+import LoadingOverlay from "@/components/LoadingOverlay";
 
 export default function HomePage() {
   const [formData, setFormData] = useState<Record<string, any>>({
@@ -29,7 +30,7 @@ export default function HomePage() {
     loan: "",
     liveIn: "",
     moveIn: "",
-    area: [],
+    region: [],
   });
 
   const handleChange = (
@@ -84,6 +85,7 @@ export default function HomePage() {
   };
 
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async () => {
     const missing = validateFormData(formData);
@@ -97,6 +99,7 @@ export default function HomePage() {
     }
 
     const key = generateHashedKey();
+    setIsLoading(true); // 로딩 시작
 
     try {
       await setDoc(doc(FirebaseDB, "reports", key), {
@@ -107,6 +110,8 @@ export default function HomePage() {
     } catch (error) {
       console.error("문서 저장 실패:", error);
       alert("데이터 저장 중 오류가 발생했습니다.");
+    } finally {
+      setIsLoading(false); // 로딩 종료
     }
   };
 
@@ -183,10 +188,10 @@ export default function HomePage() {
             onChange={handleChange}
           />
           {renderCheckboxGroup({
-            name: "area",
-            options: selectFields.area.options,
-            label: selectFields.area.label,
-            value: formData.area,
+            name: "region",
+            options: selectFields.region.options,
+            label: selectFields.region.label,
+            value: formData.region,
             onChange: handleCheckboxChange,
           })}
 
@@ -198,6 +203,7 @@ export default function HomePage() {
             >
               🔍 나에게 맞는 정책 보기
             </button>
+            {isLoading && <LoadingOverlay />}
           </div>
         </div>
       </div>

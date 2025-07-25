@@ -9,7 +9,7 @@ export const fieldLabels: Record<string, string> = {
   loan: "대출 계획 여부",
   liveIn: "실거주 여부",
   moveIn: "전입 예정 시기",
-  area: "희망 지역",
+  region: "희망 지역",
 };
 
 export const conditionalFields: Record<
@@ -65,7 +65,7 @@ export const selectFields = {
     label: "희망 매매가",
     options: ["3억 이하", "3억 ~ 5억", "5억 ~ 7억", "7억 ~ 9억", "9억 이상"],
   },
-  area: {
+  region: {
     label: "희망 지역",
     options: ["서울", "경기 북부", "경기 남부", "인천", "지방 광역시"],
   },

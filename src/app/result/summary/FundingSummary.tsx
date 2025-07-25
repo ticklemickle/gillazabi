@@ -10,7 +10,7 @@ export default function FundingSummary({ price }: Props) {
   return (
     <section className="mt-10">
       <h2 className="text-lg font-semibold border-b pb-1 mb-3">
-        💰 자금 계획 요약
+        💰 자금 시나리오
       </h2>
       <div className="bg-gray-50 p-4 rounded-xl text-sm space-y-2 leading-relaxed">
         <div className="flex justify-between">

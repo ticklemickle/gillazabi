@@ -14,7 +14,7 @@ export default function PolicyList({ tags }: Props) {
   return (
     <section className="mt-8">
       <h2 className="text-lg font-semibold border-b pb-1 mb-3">
-        ✅ 적용 가능한 정책 목록
+        ✅ 이런 정책을 참고하세요
       </h2>
 
       {filtered.length === 0 ? (

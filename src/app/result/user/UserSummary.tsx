@@ -10,7 +10,7 @@ export default function UserSummary({ data }: Props) {
   return (
     <section>
       <h2 className="text-lg font-semibold border-b pb-1 mb-2">
-        👤 사용자 정보 요약
+        👤 사용자 정보
       </h2>
       <ul className="text-sm list-disc list-inside space-y-1">
         <li>

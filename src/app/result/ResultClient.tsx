@@ -9,6 +9,7 @@ import PolicyList from "./policy/PolicyList";
 import LoadingOverlay from "@/components/LoadingOverlay";
 import FundingSummary from "./summary/FundingSummary";
 import UserSummary from "./user/UserSummary";
+import { Region } from "./recommend/lists/houseType";
 
 const getPolicyTags = (data: Record<string, string>): string[] => {
   const tags: string[] = [];
@@ -84,6 +85,7 @@ export default function ResultClient() {
           <RecommendedHomes
             maxPrice={parseFloat(data.price?.replace(/[^0-9.]/g, "") || "999")}
             realUseOnly={data.liveIn === "예"}
+            region={data.region as Region}
           />
         </section>
 
