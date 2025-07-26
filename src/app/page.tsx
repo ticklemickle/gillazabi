@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RadioGroup } from "@/components/inputForm/RadioGroup";
 import {
   shouldShowField,
@@ -17,6 +17,12 @@ import { doc, setDoc } from "firebase/firestore";
 import { getKSTTimestamp } from "@/constants/time";
 import { FirebaseDB } from "@/lib/firebase";
 import LoadingOverlay from "@/components/LoadingOverlay";
+import {
+  clearUserStorage,
+  getOrCreateUserId,
+  loadFormData,
+  saveFormData,
+} from "@/components/inputForm/lib/userStorage";
 
 export default function HomePage() {
   const [formData, setFormData] = useState<Record<string, any>>({
@@ -41,7 +47,6 @@ export default function HomePage() {
     setFormData((prev) => {
       const next = { ...prev, [name]: value };
 
-      // 종속 필드 초기화
       Object.entries(conditionalFields).forEach(
         ([field, { dependsOn, showIf }]) => {
           if (dependsOn === name && !showIf.includes(value)) {
@@ -84,8 +89,19 @@ export default function HomePage() {
     });
   };
 
+  const handleReset = () => {
+    if (confirm("저장된 데이터를 모두 초기화하시겠습니까?")) {
+      clearUserStorage();
+      window.location.reload();
+    }
+  };
+
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  useEffect(() => {
+    const saved = loadFormData();
+    if (saved) setFormData(saved);
+  }, []);
 
   const handleSubmit = async () => {
     const missing = validateFormData(formData);
@@ -98,12 +114,15 @@ export default function HomePage() {
       return;
     }
 
+    saveFormData(formData);
+
     const key = generateHashedKey();
-    setIsLoading(true); // 로딩 시작
+    setIsLoading(true);
 
     try {
       await setDoc(doc(FirebaseDB, "reports", key), {
         ...formData,
+        userId: getOrCreateUserId(),
         createdAt: getKSTTimestamp(),
       });
       router.push(`/result?key=${key}`);
@@ -111,16 +130,27 @@ export default function HomePage() {
       console.error("문서 저장 실패:", error);
       alert("데이터 저장 중 오류가 발생했습니다.");
     } finally {
-      setIsLoading(false); // 로딩 종료
+      setIsLoading(false);
     }
   };
 
   return (
     <main className="bg-gray-50 px-4 py-6 min-h-screen">
       <div className="max-w-md mx-auto bg-white rounded-2xl shadow-lg p-6 space-y-6">
-        <h1 className="text-2xl font-semibold text-center text-[#000]">
-          🏠 부동산 정책 맞춤 조회
-        </h1>
+        <div className="relative">
+          <h1 className="text-2xl font-semibold text-center text-[#000]">
+            부동산 정책 맞춤 조회
+          </h1>
+
+          <button
+            type="button"
+            onClick={handleReset}
+            className="absolute top-1/2 -translate-y-1/2 right-0 text-black text-base px-2 py-1 hover:text-gray-800 hover:bg-gray-100 rounded-full transition"
+            title="전체 초기화"
+          >
+            ⟳
+          </button>
+        </div>
 
         <div className="space-y-4">
           {renderCustomSelect(
@@ -134,18 +164,21 @@ export default function HomePage() {
             name="houseCount"
             options={["무주택", "1주택", "2주택 이상"]}
             label="주택 수"
+            value={formData.houseCount}
             onChange={handleChange}
           />
           <RadioGroup
             name="married"
             options={["기혼", "미혼"]}
             label="결혼 여부"
+            value={formData.married}
             onChange={handleChange}
           />
           <RadioGroup
             name="children"
             options={["있음", "없음"]}
             label="자녀 유무"
+            value={formData.children}
             onChange={handleChange}
           />
           {shouldShowField("childrenBirthYear", formData) &&
@@ -171,6 +204,7 @@ export default function HomePage() {
             name="loan"
             options={["예", "아니오"]}
             label="현재 대출 여부"
+            value={formData.loan}
             onChange={handleChange}
           />
           {shouldShowField("moveIn", formData) && (
@@ -178,6 +212,7 @@ export default function HomePage() {
               name="moveIn"
               options={["3개월 이내", "6개월 이내", "1년 이내", "미정"]}
               label="전입 예정 시기"
+              value={formData.moveIn}
               onChange={handleChange}
             />
           )}
@@ -185,6 +220,7 @@ export default function HomePage() {
             name="liveIn"
             options={["예", "아니오"]}
             label="실거주 여부"
+            value={formData.liveIn}
             onChange={handleChange}
           />
           {renderCheckboxGroup({
@@ -195,7 +231,7 @@ export default function HomePage() {
             onChange: handleCheckboxChange,
           })}
 
-          <div className="pt-4">
+          <div className="pt-4 space-y-3">
             <button
               type="button"
               onClick={handleSubmit}
@@ -203,8 +239,9 @@ export default function HomePage() {
             >
               🔍 나에게 맞는 정책 보기
             </button>
-            {isLoading && <LoadingOverlay />}
           </div>
+
+          {isLoading && <LoadingOverlay />}
         </div>
       </div>
     </main>

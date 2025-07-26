@@ -3,11 +3,13 @@ export const RadioGroup = ({
   options,
   label,
   onChange,
+  value,
 }: {
   name: string;
   options: string[];
   label?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  value?: string;
 }) => (
   <div className="space-y-1">
     {label && <label className="block font-semibold mb-1">{label}</label>}
@@ -20,6 +22,7 @@ export const RadioGroup = ({
             value={v}
             className="sr-only peer"
             onChange={onChange}
+            checked={value === v}
           />
           <div
             className="py-3 rounded-xl text-center cursor-pointer text-[#000]

@@ -10,6 +10,7 @@ import LoadingOverlay from "@/components/LoadingOverlay";
 import FundingSummary from "./summary/FundingSummary";
 import UserSummary from "./user/UserSummary";
 import { Region } from "./recommend/lists/houseType";
+import { parseMaxPrice } from "./recommend/parsePriceRange";
 
 const getPolicyTags = (data: Record<string, string>): string[] => {
   const tags: string[] = [];
@@ -69,9 +70,9 @@ export default function ResultClient() {
       <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-md p-6 space-y-8">
         {/* 헤더 */}
         <header className="text-center">
-          <h1 className="text-2xl font-semibold">📝 부동산 정책 맞춤 리포트</h1>
+          <h1 className="text-2xl font-semibold">부동산 정책 맞춤 리포트</h1>
           <p className="text-sm text-gray-500 mt-1">
-            당신의 조건에 맞는 정책 요약과 추천 정보
+            최적의 정책 요약과 추천 단지
           </p>
         </header>
 
@@ -83,7 +84,7 @@ export default function ResultClient() {
         {/* 추천 매물 */}
         <section>
           <RecommendedHomes
-            maxPrice={parseFloat(data.price?.replace(/[^0-9.]/g, "") || "999")}
+            maxPrice={parseMaxPrice(data.price)}
             realUseOnly={data.liveIn === "예"}
             region={data.region as Region}
           />
