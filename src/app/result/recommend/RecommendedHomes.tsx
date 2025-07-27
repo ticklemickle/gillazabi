@@ -24,7 +24,7 @@ export default function RecommendedHomes({
   return (
     <section>
       <h2 className="text-lg font-semibold border-b pb-1 mb-3">
-        🏘️ 추천 매물 TOP 3
+        🏘️ 추천 TOP 3
       </h2>
       {filtered.length === 0 ? (
         <p className="text-sm text-gray-500">

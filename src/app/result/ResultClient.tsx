@@ -11,6 +11,7 @@ import FundingSummary from "./summary/FundingSummary";
 import UserSummary from "./user/UserSummary";
 import { Region } from "./recommend/lists/houseType";
 import { parseMaxPrice } from "./recommend/parsePriceRange";
+import { usePdfAndShare } from "@/components/usePdfAndShare";
 
 const getPolicyTags = (data: Record<string, string>): string[] => {
   const tags: string[] = [];
@@ -33,6 +34,7 @@ export default function ResultClient() {
 
   const [data, setData] = useState<DocumentData | null>(null);
   const [loading, setLoading] = useState(true);
+  const { printRef, handleSavePdf, handleCopyLink } = usePdfAndShare();
 
   useEffect(() => {
     if (!key) {
@@ -66,7 +68,7 @@ export default function ResultClient() {
   if (!data) return <p>데이터를 찾을 수 없습니다.</p>;
 
   return (
-    <main className="bg-gray-100 py-6 px-4 text-gray-800">
+    <main ref={printRef} className="bg-gray-100 py-6 px-4 text-gray-800">
       <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-md p-6 space-y-8">
         {/* 헤더 */}
         <header className="text-center">
@@ -109,10 +111,16 @@ export default function ResultClient() {
             상담하세요.
           </p>
           <div className="mt-4 flex flex-col sm:flex-row gap-3 justify-center">
-            <button className="bg-blue-600 text-white px-4 py-2 rounded-xl text-sm hover:bg-blue-700">
+            <button
+              onClick={handleSavePdf}
+              className="bg-blue-600 text-white px-4 py-2 rounded-xl text-sm hover:bg-blue-700"
+            >
               📥 PDF로 저장
             </button>
-            <button className="bg-gray-200 text-gray-700 px-4 py-2 rounded-xl text-sm hover:bg-gray-300">
+            <button
+              onClick={handleCopyLink}
+              className="bg-gray-200 text-gray-700 px-4 py-2 rounded-xl text-sm hover:bg-gray-300"
+            >
               🔗 링크 공유
             </button>
           </div>
