@@ -21,7 +21,7 @@ module.exports = {
         /* main color */
         "main-color": "#0c4da2",
         "main-dark": "#163387",
-        "main-darkest": "#0a1d57",
+        "main-darkest": "#093b84",
         "main-lightest": "#7092fa",
         "main-light-shadow": "#f0f4ff",
       },

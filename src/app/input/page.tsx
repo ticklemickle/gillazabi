@@ -8,6 +8,7 @@ import {
   conditionalFields,
   fieldLabels,
   selectFields,
+  fieldOptions,
 } from "@/components/inputForm/utils";
 import { renderCustomSelect } from "@/components/inputForm/renderCustomSelect";
 import { renderCheckboxGroup } from "@/components/inputForm/CheckboxGroup";
@@ -34,7 +35,7 @@ export default function inputPage() {
     income: "",
     price: "",
     loan: "",
-    liveIn: "",
+    purpose: "",
     moveIn: "",
     region: [],
   });
@@ -137,19 +138,21 @@ export default function inputPage() {
   return (
     <main className="bg-gray-50 px-4 py-6 min-h-screen">
       <div className="max-w-md mx-auto bg-white rounded-2xl shadow-lg p-6 space-y-6">
-        <div className="relative">
-          <h1 className="text-2xl font-semibold text-center text-[#000]">
-            부동산 정책 맞춤 조회
-          </h1>
+        <div className="mt-4 mb-10">
+          <div className="relative">
+            <h1 className="text-2xl font-semibold text-center text-[#000]">
+              부동산 정책 맞춤 조회
+            </h1>
 
-          <button
-            type="button"
-            onClick={handleReset}
-            className="absolute top-1/2 -translate-y-1/2 right-0 text-black text-base px-2 py-1 hover:text-gray-800 hover:bg-gray-100 rounded-full transition"
-            title="전체 초기화"
-          >
-            ⟳
-          </button>
+            <button
+              type="button"
+              onClick={handleReset}
+              className="absolute top-1/2 -translate-y-1/2 right-0 text-black text-base px-2 py-1 hover:text-gray-800 hover:bg-gray-100 rounded-full transition"
+              title="전체 초기화"
+            >
+              ⟳
+            </button>
+          </div>
         </div>
 
         <div className="space-y-4">
@@ -162,22 +165,22 @@ export default function inputPage() {
 
           <RadioGroup
             name="houseCount"
-            options={["무주택", "1주택", "2주택 이상"]}
-            label="주택 수"
+            options={fieldOptions.houseCount}
+            label={fieldLabels.houseCount}
             value={formData.houseCount}
             onChange={handleChange}
           />
           <RadioGroup
             name="married"
-            options={["기혼", "미혼"]}
-            label="결혼 여부"
+            options={fieldOptions.married}
+            label={fieldLabels.married}
             value={formData.married}
             onChange={handleChange}
           />
           <RadioGroup
             name="children"
-            options={["있음", "없음"]}
-            label="자녀 유무"
+            options={fieldOptions.children}
+            label={fieldLabels.children}
             value={formData.children}
             onChange={handleChange}
           />
@@ -194,6 +197,13 @@ export default function inputPage() {
             formData.income,
             handleSelectChange
           )}
+          {renderCheckboxGroup({
+            name: "region",
+            options: selectFields.region.options,
+            label: selectFields.region.label,
+            value: formData.region,
+            onChange: handleCheckboxChange,
+          })}
           {renderCustomSelect(
             "price",
             selectFields.price,
@@ -202,34 +212,29 @@ export default function inputPage() {
           )}
           <RadioGroup
             name="loan"
-            options={["예", "아니오"]}
-            label="현재 대출 여부"
+            options={fieldOptions.loan}
+            label={fieldLabels.loan}
             value={formData.loan}
             onChange={handleChange}
           />
+
+          <RadioGroup
+            name="purpose"
+            options={fieldOptions.purpose}
+            label={fieldLabels.purpose}
+            value={formData.purpose}
+            onChange={handleChange}
+          />
+
           {shouldShowField("moveIn", formData) && (
             <RadioGroup
               name="moveIn"
-              options={["3개월 이내", "6개월 이내", "1년 이내", "미정"]}
-              label="전입 예정 시기"
+              options={fieldOptions.moveIn}
+              label={fieldLabels.moveIn}
               value={formData.moveIn}
               onChange={handleChange}
             />
           )}
-          <RadioGroup
-            name="liveIn"
-            options={["예", "아니오"]}
-            label="실거주 여부"
-            value={formData.liveIn}
-            onChange={handleChange}
-          />
-          {renderCheckboxGroup({
-            name: "region",
-            options: selectFields.region.options,
-            label: selectFields.region.label,
-            value: formData.region,
-            onChange: handleCheckboxChange,
-          })}
 
           <div className="pt-4 space-y-3">
             <button

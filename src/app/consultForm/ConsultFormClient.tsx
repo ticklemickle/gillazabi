@@ -33,7 +33,7 @@ export default function ConsultFormClient() {
     income: params.get("income") || "",
     price: params.get("price") || "",
     loan: params.get("loan") || "",
-    liveIn: params.get("liveIn") || "",
+    purpose: params.get("purpose") || "",
     moveIn: params.get("moveIn") || "",
     region: params.get("region") || "",
   };

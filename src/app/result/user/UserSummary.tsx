@@ -52,7 +52,7 @@ export default function UserSummary({ data }: Props) {
             희망 매매가: {data.price}, 대출: {data.loan}{" "}
           </li>
           <li>
-            {data.liveIn === "예" ? "실거주 예정" : "비거주"} /{" "}
+            {data.purpose === "실거주" ? "실거주" : "투자 목적"} /{" "}
             {data.moveIn === "예" ? "6개월 내 전입 예정" : "전입 계획 없음"}
           </li>
         </ul>

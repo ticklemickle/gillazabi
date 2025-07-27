@@ -1,5 +1,3 @@
-// components/FundingSummary.tsx
-
 "use client";
 
 interface Props {

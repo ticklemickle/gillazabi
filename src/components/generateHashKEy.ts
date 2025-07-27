@@ -28,5 +28,5 @@ export function generateHashedKey(): string {
   const hash = createHash("sha256").update(uuid).digest("hex").slice(0, 16);
   const timestamp = getTimestamp();
 
-  return `${hash}${timestamp}`; // 예: 9c4f93e8ab27a1dc20250721110539
+  return `${timestamp}${hash}`;
 }

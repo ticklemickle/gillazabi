@@ -12,7 +12,7 @@ export function usePdfAndShare() {
       html2pdf()
         .set({
           margin: 0.5,
-          filename: "report_gillazabi.pdf",
+          filename: "report.pdf",
           image: { type: "jpeg", quality: 0.98 },
           html2canvas: { scale: 2 },
           jsPDF: { unit: "in", format: "a4", orientation: "portrait" },

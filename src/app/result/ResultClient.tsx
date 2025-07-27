@@ -21,7 +21,7 @@ const getPolicyTags = (data: Record<string, string>): string[] => {
   if (data.children === "있음") tags.push("자녀");
   if (parseInt(data.price.replace(/[^0-9]/g, "")) >= 60000)
     tags.push("6억초과");
-  if (data.liveIn === "예") tags.push("실거주");
+  if (data.purpose === "실거주") tags.push("실거주");
   if (data.moveIn === "예") tags.push("전입");
   if (data.loan === "예") tags.push("대출");
 
@@ -87,7 +87,7 @@ export default function ResultClient() {
         <section>
           <RecommendedHomes
             maxPrice={parseMaxPrice(data.price)}
-            realUseOnly={data.liveIn === "예"}
+            realUseOnly={data.purpose === "실거주"}
             region={data.region as Region}
           />
           <div className="mt-6 text-center">
@@ -100,7 +100,7 @@ export default function ResultClient() {
                   income: data.income,
                   price: data.price,
                   loan: data.loan,
-                  liveIn: data.liveIn,
+                  purpose: data.purpose,
                   moveIn: data.moveIn,
                   region: data.region,
                 }).toString();
@@ -132,7 +132,7 @@ export default function ResultClient() {
             ※ 본 리포트는 참고용으로, 실제 거래 시 금융기관 또는 전문가와 반드시
             상담하세요.
           </p>
-          <div className="mt-4 flex flex-col sm:flex-row gap-3 justify-center">
+          <div className="mt-4 flex flex-row gap-3 justify-center">
             <button
               onClick={handleSavePdf}
               className="bg-main-color text-white px-4 py-2 rounded-xl text-sm hover:bg-main-darkest"
