@@ -19,25 +19,28 @@ export const renderCheckboxGroup = ({
     {label && (
       <label className="block font-semibold text-[#000] mb-1">{label}</label>
     )}
-    <div className="flex flex-wrap gap-2">
-      {options.map((v) => (
-        <label
-          key={v}
-          className="flex items-center gap-2 px-3 py-2 bg-gray-100 rounded-xl cursor-pointer
-                     hover:border-main-color hover:text-main-color hover:font-semibold hover:bg-main-light-shadow"
-        >
-          <input
-            type="checkbox"
-            name={name}
-            value={v}
-            checked={value.includes(v)}
-            onChange={(e) => onChange(name, v, e.target.checked)}
-            className="accent-main-color"
-          />
-
-          <span>{v}</span>
-        </label>
-      ))}
+    <div className="flex flex-wrap gap-3 ">
+      {options.map((v) => {
+        const isChecked = value.includes(v);
+        return (
+          <button
+            key={v}
+            type="button"
+            onClick={() => onChange(name, v, !isChecked)}
+            className={`px-4 py-2 text-sm font-medium rounded-xl transition
+          ${
+            isChecked
+              ? "bg-main-light-shadow text-main-color font-semibold border border-main-color"
+              : "bg-gray-100 text-gray-800 border border-transparent"
+          }
+          hover:border-main-color hover:text-main-color hover:font-semibold hover:bg-main-light-shadow
+          active:scale-95 active:shadow-inner
+        `}
+          >
+            {v}
+          </button>
+        );
+      })}
     </div>
   </div>
 );

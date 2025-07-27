@@ -10,6 +10,11 @@ export const fieldLabels: Record<string, string> = {
   liveIn: "실거주 여부",
   moveIn: "전입 예정 시기",
   region: "희망 지역",
+  day: "상담 가능 요일",
+  time: "상담 가능 시간",
+  method: "상담 방법",
+  contact: "연락처",
+  extraMessage: "추가 문의 내용",
 };
 
 export const conditionalFields: Record<

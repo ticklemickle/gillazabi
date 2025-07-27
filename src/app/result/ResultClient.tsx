@@ -90,6 +90,28 @@ export default function ResultClient() {
             realUseOnly={data.liveIn === "예"}
             region={data.region as Region}
           />
+          <div className="mt-6 text-center">
+            <button
+              onClick={() => {
+                const query = new URLSearchParams({
+                  houseCount: data.houseCount,
+                  married: data.married,
+                  children: data.children,
+                  income: data.income,
+                  price: data.price,
+                  loan: data.loan,
+                  liveIn: data.liveIn,
+                  moveIn: data.moveIn,
+                  region: data.region,
+                }).toString();
+
+                window.open(`/consultForm?${query}`, "_blank");
+              }}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-main-color font-semibold text-white text-sm font-medium shadow-md hover:bg-main-darkest transition"
+            >
+              더 많은 매물을 문의하기
+            </button>
+          </div>
         </section>
 
         {/* 정책 목록 */}
@@ -113,7 +135,7 @@ export default function ResultClient() {
           <div className="mt-4 flex flex-col sm:flex-row gap-3 justify-center">
             <button
               onClick={handleSavePdf}
-              className="bg-blue-600 text-white px-4 py-2 rounded-xl text-sm hover:bg-blue-700"
+              className="bg-main-color text-white px-4 py-2 rounded-xl text-sm hover:bg-main-darkest"
             >
               📥 PDF로 저장
             </button>

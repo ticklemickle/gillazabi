@@ -26,9 +26,11 @@ export const RadioGroup = ({
           />
           <div
             className="py-3 rounded-xl text-center cursor-pointer text-[#000]
-              border border-transparent bg-gray-100
-              hover:border-main-color hover:text-main-color hover:font-semibold hover:bg-main-light-shadow
-              peer-checked:border-main-color peer-checked:text-main-color peer-checked:font-semibold peer-checked:bg-main-light-shadow"
+    border border-transparent bg-gray-100
+    transition duration-150 transform
+    hover:border-main-color hover:text-main-color hover:font-semibold hover:bg-main-light-shadow
+    active:scale-95 active:shadow-inner
+    peer-checked:border-main-color peer-checked:text-main-color peer-checked:font-semibold peer-checked:bg-main-light-shadow"
           >
             {v}
           </div>
