@@ -19,7 +19,7 @@ module.exports = {
         "custom-red": "#FE504F",
 
         /* main color */
-        "main-color": "#1E3A8A",
+        "main-color": "#0c4da2",
         "main-dark": "#163387",
         "main-darkest": "#0a1d57",
         "main-lightest": "#7092fa",
