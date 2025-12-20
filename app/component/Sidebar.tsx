@@ -1,4 +1,5 @@
 import { feasibilityData } from "../data/feasibility";
+import PdfDownloadButton from "../function/PdfDownloadButton";
 import ShareButton from "../function/ShareButton";
 import Summary from "./Summary";
 
@@ -25,22 +26,6 @@ function StatusDot({ status }: { status: "done" | "current" | "todo" }) {
   }
   return (
     <span className="h-5 w-5 rounded-full border-2 border-neutral-200 bg-white" />
-  );
-}
-
-function DownloadIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className="h-4 w-4"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-    >
-      <path d="M12 3v12" />
-      <path d="M7 10l5 5 5-5" />
-      <path d="M5 21h14" />
-    </svg>
   );
 }
 
@@ -161,14 +146,8 @@ export default function Sidebar() {
             <div className="flex items-center justify-between">
               <h2 className="text-base font-semibold">상세정보</h2>
 
-              <button
-                type="button"
-                className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-sm text-neutral-600 hover:bg-neutral-50"
-                aria-label="예비타당성조사보고서 다운로드"
-              >
-                <DownloadIcon />
-                <span>예비타당성조사보고서</span>
-              </button>
+              <PdfDownloadButton filename="21948_2.제안공고(전문).pdf" />
+              {/*<PdfDownloadButton filename="" /> 등록된 파일이 없는 경우*/}
             </div>
 
             <div className="overflow-hidden rounded-xl border border-neutral-200">

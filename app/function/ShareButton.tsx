@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import ToastMessage from "./ToastMessage";
 
 function ShareIcon() {
   return (
@@ -19,18 +20,15 @@ function ShareIcon() {
 }
 
 export default function ShareButton() {
-  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const handleShare = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
-      setShowToast(true);
-
-      setTimeout(() => {
-        setShowToast(false);
-      }, 2000);
+      setToastMessage("링크가 복사되었습니다");
     } catch (error) {
       console.error("URL 복사 실패:", error);
+      setToastMessage("링크 복사에 실패했습니다");
     }
   };
 
@@ -40,40 +38,23 @@ export default function ShareButton() {
         type="button"
         onClick={handleShare}
         className="
-    mt-1 inline-flex items-center gap-1 rounded-lg px-2 py-1 text-sm
-    text-neutral-500 hover:bg-neutral-50
-    cursor-pointer select-none
-    transition active:scale-[0.98] active:bg-neutral-100
-    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2
-  "
+          mt-1 inline-flex items-center gap-1 rounded-lg px-2 py-1 text-sm
+          text-neutral-500 hover:bg-neutral-50
+          cursor-pointer select-none
+          transition active:scale-[0.98] active:bg-neutral-100
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2
+        "
         aria-label="공유"
       >
         <ShareIcon />
         <span className="hidden sm:inline">공유</span>
       </button>
 
-      {/* Toast */}
-      {showToast && (
-        <div
-          role="status"
-          aria-live="polite"
-          className="
-            fixed
-            bottom-6
-            left-1/2
-            -translate-x-1/2
-            rounded-full
-            bg-toast-shadow
-            px-4
-            py-2
-            text-sm
-            text-white
-            shadow-toast
-            animate-fade-in
-          "
-        >
-          링크가 복사되었습니다
-        </div>
+      {toastMessage && (
+        <ToastMessage
+          message={toastMessage}
+          onClose={() => setToastMessage(null)}
+        />
       )}
     </>
   );

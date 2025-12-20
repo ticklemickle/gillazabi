@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "길라잡이 - 우리 동네 예비타당성조사 데이터를 한 눈에",
+  title: "길라잡이 - 우리 동네 예비타당성조사 가능성을 한 눈에",
 };
 
 export default function RootLayout({
