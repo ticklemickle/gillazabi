@@ -1,4 +1,5 @@
 import { feasibilityData } from "../data/feasibility";
+import ShareButton from "../function/ShareButton";
 import Summary from "./Summary";
 
 function Chip({ children }: { children: React.ReactNode }) {
@@ -12,34 +13,18 @@ function Chip({ children }: { children: React.ReactNode }) {
 function StatusDot({ status }: { status: "done" | "current" | "todo" }) {
   if (status === "done") {
     return (
-      <span className="h-5 w-5 rounded-full bg-emerald-500 ring-4 ring-emerald-100" />
+      <span className="h-5 w-5 rounded-full bg-main ring-4 ring-main-light" />
     );
   }
   if (status === "current") {
     return (
-      <span className="relative h-5 w-5 rounded-full border-2 border-emerald-500 bg-white">
-        <span className="absolute inset-1 rounded-full bg-emerald-500" />
+      <span className="relative h-5 w-5 rounded-full border-2 border-main-light bg-white">
+        <span className="absolute inset-1 rounded-full bg-main-light" />
       </span>
     );
   }
   return (
     <span className="h-5 w-5 rounded-full border-2 border-neutral-200 bg-white" />
-  );
-}
-
-function ShareIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className="h-5 w-5"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-    >
-      <path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7" />
-      <path d="M16 6l-4-4-4 4" />
-      <path d="M12 2v14" />
-    </svg>
   );
 }
 
@@ -63,7 +48,7 @@ export default function Sidebar() {
   const d = feasibilityData;
 
   return (
-    <div className="w-full max-w-md bg-white scrollbar-hide">
+    <div className="w-full max-w-md bg-white">
       {/* Hero links */}
       {!!d.heroLinks?.length && (
         <div className="grid grid-cols-2 gap-2 p-3">
@@ -114,29 +99,20 @@ export default function Sidebar() {
               )}
             </div>
 
-            <button
-              type="button"
-              className="mt-1 inline-flex items-center gap-1 rounded-lg px-2 py-1 text-sm text-neutral-500 hover:bg-neutral-50"
-              aria-label="공유"
-            >
-              <ShareIcon />
-              <span className="hidden sm:inline">공유</span>
-            </button>
+            <ShareButton />
           </div>
         </header>
 
         {/* AI score */}
-        <section className="space-y-3">
+        <section className="space-y-1">
           <div className="flex items-center gap-2">
-            <span className="text-lg font-semibold text-emerald-600">
-              {d.scoreLabel}
-            </span>
+            <span className="text-lg font-semibold">{d.scoreLabel}</span>
             <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-neutral-100 text-xs text-neutral-500">
               ?
             </span>
           </div>
 
-          <div className="text-5xl font-extrabold text-emerald-600 leading-none">
+          <div className="text-5xl font-extrabold">
             {d.score}
             <span className="ml-1 text-2xl font-bold">점</span>
           </div>

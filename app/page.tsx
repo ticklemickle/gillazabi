@@ -11,7 +11,7 @@ export default function Home() {
       {/* Body */}
       <main className="flex flex-1 overflow-hidden text-black ">
         {/* Sidebar: md 이상에서만 표시 */}
-        <aside className="hidden md:block w-[400px] overflow-y-auto scrollbar-hide">
+        <aside className="hidden md:block overflow-y-auto scrollbar-hide">
           <Sidebar />
         </aside>
 
