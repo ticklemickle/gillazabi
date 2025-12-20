@@ -6,12 +6,12 @@ export default function Home() {
   return (
     <div className="h-screen flex flex-col">
       {/* Header */}
-      <Header />
+      {/* <Header /> */}
 
       {/* Body */}
-      <main className="flex flex-1 overflow-hidden">
+      <main className="flex flex-1 overflow-hidden text-black ">
         {/* Sidebar: md 이상에서만 표시 */}
-        <aside className="hidden md:block w-[400px] overflow-y-auto">
+        <aside className="hidden md:block w-[400px] overflow-y-auto scrollbar-hide">
           <Sidebar />
         </aside>
 

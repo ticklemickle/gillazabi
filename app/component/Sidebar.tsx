@@ -63,30 +63,32 @@ export default function Sidebar() {
   const d = feasibilityData;
 
   return (
-    <div className="w-full max-w-md bg-white">
-      {/* Hero images */}
-      {(d.heroLeftImageUrl || d.heroRightImageUrl) && (
+    <div className="w-full max-w-md bg-white scrollbar-hide">
+      {/* Hero links */}
+      {!!d.heroLinks?.length && (
         <div className="grid grid-cols-2 gap-2 p-3">
-          <div className="aspect-[4/3] overflow-hidden rounded-xl bg-neutral-100">
-            {d.heroLeftImageUrl ? (
-              <img
-                src={d.heroLeftImageUrl}
-                alt="hero-left"
-                className="h-full w-full object-cover"
-                loading="lazy"
-              />
-            ) : null}
-          </div>
-          <div className="aspect-[4/3] overflow-hidden rounded-xl bg-neutral-100">
-            {d.heroRightImageUrl ? (
-              <img
-                src={d.heroRightImageUrl}
-                alt="hero-right"
-                className="h-full w-full object-cover"
-                loading="lazy"
-              />
-            ) : null}
-          </div>
+          {d.heroLinks.map((hero, i) => (
+            <a
+              key={i}
+              href={hero.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group aspect-[4/3] overflow-hidden rounded-xl bg-neutral-100 block"
+            >
+              {hero.thumbnail ? (
+                <img
+                  src={hero.thumbnail}
+                  alt={hero.title ?? `hero-link-${i}`}
+                  className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
+                  loading="lazy"
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center text-sm text-neutral-400">
+                  링크 열기
+                </div>
+              )}
+            </a>
+          ))}
         </div>
       )}
 

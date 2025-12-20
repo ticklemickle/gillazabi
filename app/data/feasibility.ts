@@ -1,5 +1,7 @@
 // data/feasibility.ts
 
+import { getThumbnailByUrl } from "../function/getThumbnailByUrl";
+
 export type ScheduleStatus = "done" | "current" | "todo";
 
 export interface FeasibilityData {
@@ -10,8 +12,11 @@ export interface FeasibilityData {
   subtitle?: string; // 경전철
   expectedCompletion?: string;
 
-  heroLeftImageUrl?: string;
-  heroRightImageUrl?: string;
+  heroLinks?: Array<{
+    url: string;
+    title: string;
+    thumbnail?: string;
+  }>;
 
   /* =========================
    * AI 점수 영역
@@ -67,8 +72,21 @@ export const feasibilityData: FeasibilityData = {
   subtitle: "경전철",
   expectedCompletion: "2028년 4월 준공예정",
 
-  heroLeftImageUrl: "/images/westline-1.jpg",
-  heroRightImageUrl: "/images/westline-map.jpg",
+  heroLinks: [
+    {
+      url: "https://namu.wiki/w/%EC%84%9C%EC%9A%B8%20%EA%B2%BD%EC%A0%84%EC%B2%A0%20%EC%84%9C%EB%B6%80%EC%84%A0",
+      title: "사업 개요 페이지",
+      thumbnail:
+        "https://i.namu.wiki/i/l-1wfxPknXxTfzM-SCJ81DoJE9wXCXiU1tnGnB92VkJ4EVBOrcpX4lks-J-ip5B3KjOHh0RFtNXuw7eAqQiNI3tK6ZNudiTY6z88xmomy9dgnQkJMlc4X95BGv5sz5HWWaj0qbC9O32aQyZCR-MJqQ.webp",
+    },
+    {
+      url: "https://www.youtube.com/watch?v=RWyTHNVH5dg",
+      title: "홍보 영상",
+    },
+  ].map((link) => ({
+    ...link,
+    thumbnail: link.thumbnail ?? getThumbnailByUrl(link.url),
+  })),
 
   /* AI Score */
   scoreLabel: "AI 성공 예측",
