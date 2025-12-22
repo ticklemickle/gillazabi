@@ -1,6 +1,11 @@
 // src/data/routes/gtx.ts
 import type { Route } from "./types";
 
+const COMMON_STYLE = {
+  strokeWeight: 6,
+  strokeOpacity: 0.9,
+} as const;
+
 export const GTX_ROUTES: Route[] = [
   {
     id: "gtx-a",
@@ -12,12 +17,10 @@ export const GTX_ROUTES: Route[] = [
       { lat: 37.52, lng: 127.1 }, // 잠실 근처
     ],
     style: {
+      ...COMMON_STYLE,
       strokeColor: "#7b2cff",
-      strokeWeight: 6,
-      strokeOpacity: 0.9,
       zIndex: 100,
     },
-    labelStyle: { color: "#7b2cff" },
   },
   {
     id: "gtx-b",
@@ -29,12 +32,10 @@ export const GTX_ROUTES: Route[] = [
       { lat: 37.65, lng: 127.07 },
     ],
     style: {
+      ...COMMON_STYLE,
       strokeColor: "#1e62ff",
-      strokeWeight: 6,
-      strokeOpacity: 0.9,
       zIndex: 90,
     },
-    labelStyle: { color: "#1e62ff" },
   },
   {
     id: "gtx-c",
@@ -46,11 +47,9 @@ export const GTX_ROUTES: Route[] = [
       { lat: 37.56, lng: 127.09 },
     ],
     style: {
+      ...COMMON_STYLE,
       strokeColor: "#1f9d57",
-      strokeWeight: 6,
-      strokeOpacity: 0.9,
       zIndex: 80,
     },
-    labelStyle: { color: "#1f9d57" },
   },
 ];

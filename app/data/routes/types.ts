@@ -1,23 +1,24 @@
 // src/data/routes/types.ts
 
-import { LatLng } from "../routes";
+export type LatLng = {
+  lat: number;
+  lng: number;
+};
+
+export type RouteStyle = {
+  strokeColor?: string;
+  strokeWeight?: number;
+  strokeOpacity?: number;
+  zIndex?: number;
+};
 
 export type Route = {
   id: string;
   name: string;
   path: LatLng[];
 
-  // 없으면 자동으로 path 중간점으로 처리 가능
+  // 없으면 path 중간점을 사용
   label?: LatLng;
 
-  style?: {
-    strokeColor?: string;
-    strokeWeight?: number;
-    strokeOpacity?: number;
-    zIndex?: number;
-  };
-
-  labelStyle?: {
-    color?: string;
-  };
+  style?: RouteStyle;
 };
