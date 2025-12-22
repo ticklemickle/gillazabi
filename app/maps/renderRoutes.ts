@@ -28,6 +28,8 @@ export function renderRoutes(
   const stationInfo = createStationInfoWindow(naver);
 
   let pinnedKey: string | null = null;
+  let openedStationOverlay: naver.maps.OverlayView | null = null;
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const stationDots: any[] = [];
   const DOT_VISIBLE_ZOOM = 13;
@@ -50,7 +52,8 @@ export function renderRoutes(
     );
     overlays.push(hitPolyline, visiblePolyline);
 
-    attachPolylineClickEffect(
+    /* Click 효과 */
+    const clickFx = attachPolylineClickEffect(
       naver,
       hitPolyline,
       visiblePolyline,
@@ -60,14 +63,11 @@ export function renderRoutes(
         opacity: strokeOpacity,
       },
       {
-        highlightColor: color, // 색 유지
+        highlightColor: color,
         pulseMs: 150,
         maxExtraWeight: 5,
       }
     );
-
-    // 필요하면 외부에서 선택 해제
-    // handle.setSelected(false);
 
     bindSelectRouteId(naver, hitPolyline, r.id, onSelectRouteId, listeners);
 
@@ -87,9 +87,14 @@ export function renderRoutes(
       stationDots.push(dot);
 
       bindSelectRouteId(naver, dot, r.id, onSelectRouteId, listeners);
+      /* dot click effect */
+      listeners.push(
+        naver.maps.Event.addListener(dot, "click", () => {
+          clickFx.pulse();
+        })
+      );
 
       const key = `${p.lat},${p.lng}`;
-
       addDotInteractions({
         naver,
         map,
@@ -119,6 +124,12 @@ export function renderRoutes(
       overlays.push(labelMarker);
 
       bindSelectRouteId(naver, labelMarker, r.id, onSelectRouteId, listeners);
+      /* label click effect */
+      listeners.push(
+        naver.maps.Event.addListener(labelMarker, "click", () => {
+          clickFx.pulse();
+        })
+      );
     }
   }
 
@@ -135,6 +146,13 @@ export function renderRoutes(
   for (const dot of stationDots) {
     dot.setMap(initialZoom >= DOT_VISIBLE_ZOOM ? map : null);
   }
+
+  naver.maps.Event.addListener(map, "click", () => {
+    if (openedStationOverlay) {
+      openedStationOverlay.setMap(null);
+      openedStationOverlay = null;
+    }
+  });
 
   // cleanup
   return () => {
