@@ -2,7 +2,7 @@
 import type { Route } from "./types";
 
 const COMMON_STYLE = {
-  strokeWeight: 6,
+  strokeWeight: 5,
   strokeOpacity: 0.7,
 } as const;
 
@@ -11,14 +11,12 @@ export const GTX_ROUTES: Route[] = [
     id: "gtx-a",
     name: "GTX-A",
     path: [
-      { lat: 37.5665, lng: 126.978, name: "sample1" },
-      { lat: 37.58, lng: 127.01, name: "sample1" },
-      { lat: 37.6, lng: 127.05, name: "sample1" },
-      { lat: 37.52, lng: 127.1, name: "sample1" },
+      { lat: 37.5546, lng: 126.9707, name: "서울역" },
+      { lat: 37.50887, lng: 127.06304, name: "삼성역(예정)" },
     ],
     style: {
       ...COMMON_STYLE,
-      strokeColor: "#7b2cff",
+      strokeColor: "#98618F",
       zIndex: 100,
     },
   },
