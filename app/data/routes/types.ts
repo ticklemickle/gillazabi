@@ -3,6 +3,7 @@
 export type LatLng = {
   lat: number;
   lng: number;
+  name: string;
 };
 
 export type RouteStyle = {

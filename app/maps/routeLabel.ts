@@ -19,3 +19,28 @@ export function routeLabelHTML(name: string, color = "#111") {
     </div>
   `;
 }
+
+export function stationLabelHTML(text: string, color: string) {
+  return `
+    <div style="
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 10px;
+      border-radius:999px;
+      background:#fff;
+      border:2px solid ${color};
+      box-shadow:0 2px 8px rgba(0,0,0,.18);
+      font-size:12px;
+      font-weight:700;
+      white-space:nowrap;
+    ">
+      <span style="
+        width:8px;height:8px;border-radius:50%;
+        background:${color};
+        display:inline-block;
+      "></span>
+      <span style="color:#111">${text}</span>
+    </div>
+  `;
+}

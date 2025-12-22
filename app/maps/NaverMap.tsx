@@ -22,7 +22,7 @@ export default function NaverMap() {
     if (!window.naver?.maps) return;
 
     const naver = window.naver;
-    const center = new naver.maps.LatLng(37.3595704, 127.105399);
+    const center = new naver.maps.LatLng(37.5488687, 126.98932);
 
     const map = new naver.maps.Map(mapRef.current, {
       center,
