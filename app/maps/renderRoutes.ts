@@ -1,41 +1,29 @@
-import { routeLabelHTML } from "./routeLabel";
-import type { Route } from "../data/routes/types"; // 경로는 renderRoutes.ts 위치에 맞게 조정
+import type { Route } from "../data/routes/types";
+import {
+  addDotInteractions,
+  createPolyline,
+  createRouteLabelMarker,
+  createStationDot,
+  createStationInfoWindow,
+  getLabelPos,
+} from "./routeFunction";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Naver = any;
-
-function getLabelPos(route: Route) {
-  const first = route.path[0];
-  if (!first) return null;
-  const OFFSET_LAT = 0.001;
-
-  return {
-    lat: first.lat + OFFSET_LAT,
-    lng: first.lng,
-  };
-}
-
-function stationDotHTML(color: string, sizePx = 10) {
-  // 흰 테두리+살짝 그림자 -> 지도 배경에서 잘 보임
-  const borderPx = 2;
-  const total = sizePx;
-  return `
-    <div style="
-      width:${total}px;
-      height:${total}px;
-      border-radius:50%;
-      background:${color};
-      border:${borderPx}px solid #fff;
-      box-shadow:0 1px 3px rgba(0,0,0,.35);
-      box-sizing:border-box;
-    "></div>
-  `;
-}
+type Overlay = { setMap?: (map: unknown | null) => void };
+type Listener = unknown;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function renderRoutes(map: any, naver: Naver, routes: Route[]) {
+  const overlays: Overlay[] = [];
+  const listeners: Listener[] = [];
+
+  const stationInfo = createStationInfoWindow(naver);
+
+  let pinnedKey: string | null = null;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const overlays: any[] = [];
+  const stationDots: any[] = [];
+  const DOT_VISIBLE_ZOOM = 13;
 
   for (const r of routes) {
     const color = r.style?.strokeColor ?? "#ff0000";
@@ -44,48 +32,77 @@ export function renderRoutes(map: any, naver: Naver, routes: Route[]) {
     const zIndex = r.style?.zIndex ?? 1;
 
     // 1) Polyline
-    const polyline = new naver.maps.Polyline({
-      map,
-      path: r.path.map((p) => new naver.maps.LatLng(p.lat, p.lng)),
-      strokeColor: color,
-      strokeWeight,
-      strokeOpacity,
-      zIndex,
-    });
-    overlays.push(polyline);
+    overlays.push(
+      createPolyline(naver, map, r, color, strokeWeight, strokeOpacity, zIndex)
+    );
 
-    // 2) Station dots (각 정거장 원형 dot)
-    for (const p of r.path) {
-      const dot = new naver.maps.Marker({
-        map,
-        position: new naver.maps.LatLng(p.lat, p.lng),
-        icon: {
-          content: stationDotHTML(color, 10),
-          // dot의 정중앙이 좌표에 오도록
-          anchor: new naver.maps.Point(5, 5),
-        },
-        clickable: false,
-        zIndex: zIndex + 1, // 선 위에 올라오게
-      });
-      overlays.push(dot);
+    const hasRouteName = r.name.trim().length > 0;
+    if (!hasRouteName) {
+      continue; // 다음 route로
     }
 
-    // 3) 라벨(이름표) - HTML 마커
+    // 2) Station dots
+    for (const p of r.path) {
+      const name = p.name ?? "";
+      if (!name) continue;
+
+      const dot = createStationDot(naver, map, p.lat, p.lng, color, zIndex);
+      overlays.push(dot);
+      //비율에 따라 dot 안 보여주기
+      stationDots.push(dot);
+
+      const key = `${p.lat},${p.lng}`;
+
+      addDotInteractions({
+        naver,
+        map,
+        dot,
+        stationInfo,
+        name,
+        key,
+        getPinnedKey: () => pinnedKey,
+        setPinnedKey: (v) => {
+          pinnedKey = v;
+        },
+        listeners,
+      });
+    }
+
+    // 3) 라벨(이름표)
     const labelPos = getLabelPos(r);
-    if (!labelPos) continue;
-    const labelMarker = new naver.maps.Marker({
-      map,
-      position: new naver.maps.LatLng(labelPos.lat, labelPos.lng),
-      icon: {
-        // labelStyle 없이 선 색상으로 통일
-        content: routeLabelHTML(r.name, color),
-        anchor: new naver.maps.Point(20, 20),
-      },
-      clickable: false,
-    });
-    overlays.push(labelMarker);
+    if (labelPos) {
+      overlays.push(
+        createRouteLabelMarker(
+          naver,
+          map,
+          labelPos.lat,
+          labelPos.lng,
+          r.name,
+          color
+        )
+      );
+    }
+  }
+
+  const zoomListener = naver.maps.Event.addListener(map, "zoom_changed", () => {
+    const zoom = map.getZoom();
+    for (const dot of stationDots) {
+      dot.setMap(zoom >= DOT_VISIBLE_ZOOM ? map : null);
+    }
+  });
+
+  listeners.push(zoomListener);
+
+  const initialZoom = map.getZoom();
+  for (const dot of stationDots) {
+    dot.setMap(initialZoom >= DOT_VISIBLE_ZOOM ? map : null);
   }
 
   // cleanup
-  return () => overlays.forEach((o) => o.setMap?.(null));
+  return () => {
+    pinnedKey = null;
+    stationInfo.close();
+    listeners.forEach((l) => naver.maps.Event.removeListener(l));
+    overlays.forEach((o) => o.setMap?.(null));
+  };
 }
