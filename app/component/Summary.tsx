@@ -1,9 +1,17 @@
-import { feasibilityData } from "../data/feasibility";
+import { feasibilityDataMap } from "../data/feasibility";
+import type { FeasibilityData } from "../data/feasibility";
 
-export default function Summary() {
-  const d = feasibilityData;
+type Props = {
+  feasibilityKey: string;
+};
 
-  if (!d.aiSummary && (!d.benefits || d.benefits.length === 0)) return null;
+export default function Summary({ feasibilityKey }: Props) {
+  const d: FeasibilityData | undefined = feasibilityDataMap[feasibilityKey];
+
+  // key가 없거나, 요약/편익이 없으면 렌더링 안 함
+  if (!d || (!d.aiSummary && (!d.benefits || d.benefits.length === 0))) {
+    return null;
+  }
 
   return (
     <section className="space-y-3">

@@ -7,7 +7,7 @@ const COMMON_STYLE = {
 
 export const LIGHT_RAIL: Route[] = [
   {
-    id: "western line",
+    id: "seobu-line",
     name: "서부선",
     path: [
       { lat: 37.59257, lng: 126.9139, name: "새절역" },

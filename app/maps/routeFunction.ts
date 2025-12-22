@@ -118,6 +118,7 @@ export function createPolyline(
     strokeWeight,
     strokeOpacity,
     zIndex,
+    clickable: true,
   });
 }
 

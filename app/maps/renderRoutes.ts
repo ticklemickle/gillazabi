@@ -13,8 +13,13 @@ type Naver = any;
 type Overlay = { setMap?: (map: unknown | null) => void };
 type Listener = unknown;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function renderRoutes(map: any, naver: Naver, routes: Route[]) {
+export function renderRoutes(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  map: any,
+  naver: Naver,
+  routes: Route[],
+  onSelectRouteId: (routeId: string) => void
+) {
   const overlays: Overlay[] = [];
   const listeners: Listener[] = [];
 
@@ -32,9 +37,22 @@ export function renderRoutes(map: any, naver: Naver, routes: Route[]) {
     const zIndex = r.style?.zIndex ?? 1;
 
     // 1) Polyline
-    overlays.push(
-      createPolyline(naver, map, r, color, strokeWeight, strokeOpacity, zIndex)
+    const polyline = createPolyline(
+      naver,
+      map,
+      r,
+      color,
+      strokeWeight,
+      strokeOpacity,
+      zIndex
     );
+    overlays.push(polyline);
+
+    const listener = naver.maps.Event.addListener(polyline, "click", () => {
+      onSelectRouteId(r.id);
+      console.log(r.id);
+    });
+    listeners.push(listener);
 
     const hasRouteName = r.name.trim().length > 0;
     if (!hasRouteName) {

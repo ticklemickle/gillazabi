@@ -12,7 +12,11 @@ declare global {
   }
 }
 
-export default function NaverMap() {
+type Props = {
+  onSelectRouteId: (routeId: string) => void;
+};
+
+export default function NaverMap({ onSelectRouteId }: Props) {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const [ready, setReady] = useState(false);
 
@@ -29,9 +33,9 @@ export default function NaverMap() {
       zoom: 12,
     });
 
-    const cleanup = renderRoutes(map, naver, ROUTES);
+    const cleanup = renderRoutes(map, naver, ROUTES, onSelectRouteId);
     return cleanup;
-  }, [ready]);
+  }, [ready, onSelectRouteId]);
 
   const ncpKeyId = process.env.NEXT_PUBLIC_NAVER_MAPS_CLIENT_ID;
 

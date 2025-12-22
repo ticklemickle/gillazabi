@@ -1,4 +1,4 @@
-import { feasibilityData } from "../data/feasibility";
+import { feasibilityDataMap } from "../data/feasibility";
 import PdfDownloadButton from "../function/PdfDownloadButton";
 import ShareButton from "../function/ShareButton";
 import Summary from "./Summary";
@@ -29,8 +29,24 @@ function StatusDot({ status }: { status: "done" | "current" | "todo" }) {
   );
 }
 
-export default function Sidebar() {
-  const d = feasibilityData;
+type Props = {
+  selectedRouteId: string | null; // 선택 전이면 null
+};
+
+export default function Sidebar({ selectedRouteId }: Props) {
+  // ✅ map에서 선택된 id의 데이터를 꺼냄
+  const d = selectedRouteId ? feasibilityDataMap[selectedRouteId] : undefined;
+
+  // 선택된 노선이 없거나, id가 map에 없으면 안내 UI (원하면 return null로 바꿔도 됨)
+  if (!d) {
+    return (
+      <div className="w-full max-w-md bg-white">
+        <div className="px-5 py-6 text-sm text-neutral-500">
+          노선을 선택하면 보고서 요약이 표시됩니다.
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-md bg-white">
@@ -168,7 +184,7 @@ export default function Sidebar() {
         )}
 
         {/* AI summary */}
-        <Summary />
+        <Summary feasibilityKey={selectedRouteId ?? ""} />
 
         {/* Complexes */}
         {!!d.complexes?.length && (
