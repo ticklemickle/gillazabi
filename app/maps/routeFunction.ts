@@ -157,7 +157,7 @@ export function createRouteLabelMarker(
       content: routeLabelHTML(routeName, color),
       anchor: new naver.maps.Point(20, 20),
     },
-    clickable: false,
+    clickable: true,
   });
 }
 
@@ -233,4 +233,17 @@ export function updateDotVisibility(map: any, dots: any[], minZoom: number) {
       dot.setMap(null);
     }
   }
+}
+
+export function bindSelectRouteId(
+  naver: Naver,
+  overlay: { setMap?: (map: unknown | null) => void },
+  routeId: string,
+  onSelectRouteId: (id: string) => void,
+  listeners: unknown[]
+) {
+  const l = naver.maps.Event.addListener(overlay, "click", () => {
+    onSelectRouteId(routeId);
+  });
+  listeners.push(l);
 }

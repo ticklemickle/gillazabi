@@ -1,6 +1,7 @@
 import type { Route } from "../data/routes/types";
 import {
   addDotInteractions,
+  bindSelectRouteId,
   createPolyline,
   createRouteLabelMarker,
   createStationDot,
@@ -48,11 +49,7 @@ export function renderRoutes(
     );
     overlays.push(polyline);
 
-    const listener = naver.maps.Event.addListener(polyline, "click", () => {
-      onSelectRouteId(r.id);
-      console.log(r.id);
-    });
-    listeners.push(listener);
+    bindSelectRouteId(naver, polyline, r.id, onSelectRouteId, listeners);
 
     const hasRouteName = r.name.trim().length > 0;
     if (!hasRouteName) {
@@ -66,8 +63,10 @@ export function renderRoutes(
 
       const dot = createStationDot(naver, map, p.lat, p.lng, color, zIndex);
       overlays.push(dot);
-      //비율에 따라 dot 안 보여주기
+      //지도 ZOOM 비율에 따라 dot 안 보여주기
       stationDots.push(dot);
+
+      bindSelectRouteId(naver, dot, r.id, onSelectRouteId, listeners);
 
       const key = `${p.lat},${p.lng}`;
 
@@ -89,16 +88,17 @@ export function renderRoutes(
     // 3) 라벨(이름표)
     const labelPos = getLabelPos(r);
     if (labelPos) {
-      overlays.push(
-        createRouteLabelMarker(
-          naver,
-          map,
-          labelPos.lat,
-          labelPos.lng,
-          r.name,
-          color
-        )
+      const labelMarker = createRouteLabelMarker(
+        naver,
+        map,
+        labelPos.lat,
+        labelPos.lng,
+        r.name,
+        color
       );
+      overlays.push(labelMarker);
+
+      bindSelectRouteId(naver, labelMarker, r.id, onSelectRouteId, listeners);
     }
   }
 
