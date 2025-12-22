@@ -1,6 +1,7 @@
 import type { Route } from "../data/routes/types";
 import {
   addDotInteractions,
+  attachPolylineClickEffect,
   bindSelectRouteId,
   createPolyline,
   createRouteLabelMarker,
@@ -38,7 +39,7 @@ export function renderRoutes(
     const zIndex = r.style?.zIndex ?? 1;
 
     // 1) Polyline
-    const polyline = createPolyline(
+    const { hitPolyline, visiblePolyline } = createPolyline(
       naver,
       map,
       r,
@@ -47,9 +48,28 @@ export function renderRoutes(
       strokeOpacity,
       zIndex
     );
-    overlays.push(polyline);
+    overlays.push(hitPolyline, visiblePolyline);
 
-    bindSelectRouteId(naver, polyline, r.id, onSelectRouteId, listeners);
+    attachPolylineClickEffect(
+      naver,
+      hitPolyline,
+      visiblePolyline,
+      {
+        color,
+        weight: strokeWeight,
+        opacity: strokeOpacity,
+      },
+      {
+        highlightColor: color, // 색 유지
+        pulseMs: 150,
+        maxExtraWeight: 5,
+      }
+    );
+
+    // 필요하면 외부에서 선택 해제
+    // handle.setSelected(false);
+
+    bindSelectRouteId(naver, hitPolyline, r.id, onSelectRouteId, listeners);
 
     const hasRouteName = r.name.trim().length > 0;
     if (!hasRouteName) {

@@ -109,17 +109,37 @@ export function createPolyline(
   color: string,
   strokeWeight: number,
   strokeOpacity: number,
-  zIndex: number
+  zIndex: number,
+  hitPadding: number = 20 // ← 선택 여유 범위(px)
 ) {
-  return new naver.maps.Polyline({
+  const path = route.path.map((p) => new naver.maps.LatLng(p.lat, p.lng));
+
+  // 클릭 판정용 (투명 + 두꺼움)
+  const hitPolyline = new naver.maps.Polyline({
     map,
-    path: route.path.map((p) => new naver.maps.LatLng(p.lat, p.lng)),
+    path,
+    strokeColor: "#000000",
+    strokeWeight: strokeWeight + hitPadding,
+    strokeOpacity: 0,
+    clickable: true,
+    zIndex: zIndex - 1,
+  });
+
+  // 실제 화면에 보이는 선
+  const visiblePolyline = new naver.maps.Polyline({
+    map,
+    path,
     strokeColor: color,
     strokeWeight,
     strokeOpacity,
+    clickable: false, // 이벤트는 hitPolyline만
     zIndex,
-    clickable: true,
   });
+
+  return {
+    hitPolyline,
+    visiblePolyline,
+  };
 }
 
 export function createStationDot(
@@ -246,4 +266,66 @@ export function bindSelectRouteId(
     onSelectRouteId(routeId);
   });
   listeners.push(l);
+}
+
+export function attachPolylineClickEffect(
+  naver: Naver,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  hitPolyline: any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  visiblePolyline: any,
+  base: { color: string; weight: number; opacity: number },
+  effect?: {
+    highlightColor?: string; // 클릭 순간만 쓰는 색
+    pulseMs?: number;
+    maxExtraWeight?: number;
+  }
+) {
+  const highlightColor = effect?.highlightColor ?? base.color;
+  const pulseMs = effect?.pulseMs ?? 140;
+  const maxExtraWeight = effect?.maxExtraWeight ?? 3;
+
+  let animId = 0;
+
+  const reset = () => {
+    visiblePolyline.setOptions({
+      strokeColor: base.color,
+      strokeWeight: base.weight,
+      strokeOpacity: base.opacity,
+    });
+  };
+
+  const pulse = () => {
+    animId += 1;
+    const myId = animId;
+    const start = performance.now();
+
+    const tick = (now: number) => {
+      if (myId !== animId) return;
+
+      const t = Math.min(1, (now - start) / pulseMs);
+      const wave = Math.sin(Math.PI * t); // 0 → 1 → 0
+
+      visiblePolyline.setOptions({
+        strokeColor: highlightColor,
+        strokeWeight: base.weight + wave * maxExtraWeight,
+        strokeOpacity: Math.min(1, base.opacity + wave * 0.15),
+      });
+
+      if (t < 1) {
+        requestAnimationFrame(tick);
+      } else {
+        reset(); // ← 반드시 원래 스타일로 복귀
+      }
+    };
+
+    requestAnimationFrame(tick);
+  };
+
+  naver.maps.Event.addListener(hitPolyline, "click", pulse);
+
+  return {
+    pulse, // 외부에서 강제로 이펙트 줄 수도 있음
+    reset,
+  };
 }
