@@ -2,7 +2,7 @@
 
 import { getThumbnailByUrl } from "../function/getThumbnailByUrl";
 
-export type ScheduleStatus = "done" | "current" | "todo" | "upcoming";
+export type ScheduleStatus = "done" | "current" | "todo";
 
 export interface FeasibilityData {
   /* =========================
@@ -260,8 +260,8 @@ export const feasibilityDataMap: Record<string, FeasibilityData> = {
       { label: "예타/검토", period: "2010s~2020s", status: "done" },
       { label: "기본설계", period: "2020s", status: "current" },
       { label: "실시설계", period: "2020s~", status: "current" },
-      { label: "착공", period: "2020s~", status: "upcoming" },
-      { label: "개통", period: "2030년 전후", status: "upcoming" },
+      { label: "착공", period: "2020s~", status: "todo" },
+      { label: "개통", period: "2030년 전후", status: "todo" },
     ],
 
     details: [
@@ -331,8 +331,8 @@ export const feasibilityDataMap: Record<string, FeasibilityData> = {
       { label: "예타", period: "2010s", status: "done" },
       { label: "기본설계", period: "2020s", status: "current" },
       { label: "실시설계", period: "2020s~", status: "current" },
-      { label: "착공", period: "2020s~", status: "upcoming" },
-      { label: "개통", period: "2028~2031(예정)", status: "upcoming" },
+      { label: "착공", period: "2020s~", status: "todo" },
+      { label: "개통", period: "2028~2031(예정)", status: "todo" },
     ],
 
     details: [
