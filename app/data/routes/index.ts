@@ -1,4 +1,3 @@
-// src/data/routes/index.ts
 import { GTX_ROUTES } from "./gtx";
 import { LIGHT_RAIL } from "./light_rail";
 

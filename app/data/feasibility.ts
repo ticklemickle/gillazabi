@@ -4,6 +4,52 @@ import { getThumbnailByUrl } from "../function/getThumbnailByUrl";
 
 export type ScheduleStatus = "done" | "current" | "todo";
 
+type Option = { id: string; label: string };
+
+export const REGION_OPTIONS: Option[] = [
+  { id: "all", label: "전체" },
+  { id: "gangnam", label: "강남권" },
+  { id: "gangbuk", label: "강북권" },
+  { id: "seonam", label: "서남권" },
+  { id: "seobuk", label: "서북권" },
+  { id: "incheon", label: "인천, 광역" },
+  { id: "gg_north", label: "경기 북부" },
+  { id: "gg_south", label: "경기 남부" },
+];
+
+export const STAGE_OPTIONS: Option[] = [
+  { id: "all", label: "전체" },
+  { id: "plan", label: "계획" },
+  { id: "pre_feasibility", label: "예비타당성" },
+  { id: "basic_plan", label: "기본계획" },
+  { id: "design_bid", label: "설계, 입찰" },
+  { id: "construction", label: "공사 중" },
+  { id: "partial_open", label: "부분 개통" },
+  { id: "open_done", label: "개통 완료" },
+  { id: "review", label: "검토 단계" },
+];
+
+export type RegionFilterId = (typeof REGION_OPTIONS)[number]["id"]; // "all" 포함
+
+export type RegionId =
+  | "gangnam"
+  | "gangbuk"
+  | "seonam"
+  | "seobuk"
+  | "incheon"
+  | "gg_north"
+  | "gg_south";
+
+export type StageId =
+  | "plan"
+  | "pre_feasibility"
+  | "basic_plan"
+  | "design_bid"
+  | "construction"
+  | "partial_open"
+  | "open_done"
+  | "review";
+
 export interface FeasibilityData {
   /* =========================
    * Hero / Header 영역
@@ -61,6 +107,9 @@ export interface FeasibilityData {
     badgeDate?: string;
     imageUrl?: string;
   }>;
+
+  regionId: RegionId; // 권역
+  stageId: StageId; // 진행단계
 }
 
 /* =========================
@@ -144,6 +193,8 @@ export const feasibilityDataMap: Record<string, FeasibilityData> = {
         imageUrl: "/images/complex-1.jpg",
       },
     ],
+    regionId: "gangnam",
+    stageId: "pre_feasibility",
   },
 
   /* =========================
@@ -220,6 +271,8 @@ export const feasibilityDataMap: Record<string, FeasibilityData> = {
         imageUrl: "/images/complex-gtx-a-1.jpg",
       },
     ],
+    regionId: "gangnam",
+    stageId: "design_bid",
   },
 
   /* =========================
@@ -291,6 +344,8 @@ export const feasibilityDataMap: Record<string, FeasibilityData> = {
         imageUrl: "/images/complex-gtx-b-1.jpg",
       },
     ],
+    regionId: "incheon",
+    stageId: "design_bid",
   },
 
   /* =========================
@@ -365,5 +420,7 @@ export const feasibilityDataMap: Record<string, FeasibilityData> = {
         imageUrl: "/images/complex-gtx-c-1.jpg",
       },
     ],
+    regionId: "incheon",
+    stageId: "plan",
   },
 };

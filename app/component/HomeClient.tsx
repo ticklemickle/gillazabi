@@ -9,6 +9,11 @@ import Header from "./Header";
 
 export default function HomeClient() {
   const [selectedRouteId, setSelectedRouteId] = useState<string | null>(null);
+  type Filters = { region: string; stage: string };
+  const [filters, setFilters] = useState<Filters>({
+    region: "all",
+    stage: "all",
+  });
   const sidebarScrollRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     const el = sidebarScrollRef.current;
@@ -27,7 +32,7 @@ export default function HomeClient() {
       <main className="relative flex-1 overflow-hidden text-black">
         {/* Map: 화면 꽉 */}
         <section className="absolute inset-0">
-          <MapView onSelectRouteId={setSelectedRouteId} />
+          <MapView filters={filters} onSelectRouteId={setSelectedRouteId} />
         </section>
 
         {/* Sidebar: 필요한 만큼만 + 너무 커지면 내부 스크롤 */}
@@ -39,10 +44,15 @@ export default function HomeClient() {
           w-full max-w-md
           max-h-[calc(100vh-120px)]
           overflow-y-auto scrollbar-hide
-          rounded-2xl shadow-lg
+          rounded-1xl shadow-lg
         "
         >
-          <Sidebar selectedRouteId={selectedRouteId} />
+          <Sidebar
+            selectedRouteId={selectedRouteId}
+            filters={filters}
+            onChangeFilters={setFilters}
+            onSelectRouteId={setSelectedRouteId}
+          />
         </div>
 
         {/* Mobile dock */}

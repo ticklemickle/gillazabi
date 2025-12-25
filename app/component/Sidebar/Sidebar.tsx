@@ -8,20 +8,35 @@ import { feasibilityDataMap } from "@/app/data/feasibility";
 import Summary from "../Summary";
 import SidebarDefault from "./SidebarDefault";
 
+type Filters = { region: string; stage: string };
+
 type Props = {
   selectedRouteId: string | null;
+  filters: Filters;
+  onChangeFilters: (next: Filters) => void;
+  onSelectRouteId: (routeId: string | null) => void;
 };
 
-export default function Sidebar({ selectedRouteId }: Props) {
+export default function Sidebar({
+  selectedRouteId,
+  filters,
+  onChangeFilters,
+  onSelectRouteId,
+}: Props) {
   const d = selectedRouteId ? feasibilityDataMap[selectedRouteId] : undefined;
 
   if (!d) {
-    return <SidebarDefault onApply={(f) => console.log(f)} />;
+    return (
+      <SidebarDefault
+        filters={filters}
+        onChangeFilters={onChangeFilters}
+        onSelectRouteId={(id) => onSelectRouteId(id)}
+      />
+    );
   }
 
   return (
     <div className="w-full max-w-md bg-white">
-      {/* <LogoSection /> */}
       <HeroLinks heroes={d.heroLinks} />
 
       <div className="px-5 pb-8 space-y-6">

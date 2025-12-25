@@ -147,12 +147,13 @@ export function renderRoutes(
     dot.setMap(initialZoom >= DOT_VISIBLE_ZOOM ? map : null);
   }
 
-  naver.maps.Event.addListener(map, "click", () => {
+  const mapClickListener = naver.maps.Event.addListener(map, "click", () => {
     if (openedStationOverlay) {
       openedStationOverlay.setMap(null);
       openedStationOverlay = null;
     }
   });
+  listeners.push(mapClickListener);
 
   // cleanup
   return () => {
