@@ -2,10 +2,12 @@ import { feasibilityDataMap } from "../data/feasibility";
 import type { FeasibilityData } from "../data/feasibility";
 
 type Props = {
-  feasibilityKey: string;
+  feasibilityKey: string | null;
 };
 
 export default function Summary({ feasibilityKey }: Props) {
+  if (!feasibilityKey) return null;
+
   const d: FeasibilityData | undefined = feasibilityDataMap[feasibilityKey];
 
   // key가 없거나, 요약/편익이 없으면 렌더링 안 함

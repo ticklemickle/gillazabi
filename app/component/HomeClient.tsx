@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Sidebar from "./Sidebar";
+// import Sidebar from "./Sidebar";
 import MapView from "./MapView";
 import MobileBottomDock from "./MobileBottomDock";
+import Sidebar from "./Sidebar/Sidebar";
 
 export default function HomeClient() {
   const [selectedRouteId, setSelectedRouteId] = useState<string | null>(null);
