@@ -19,20 +19,23 @@ type Props = {
   onSelectRouteId: (routeId: string) => void;
 };
 
-function applyRouteFilters<T extends { regionId?: string; stageId?: string }>(
-  routes: T[],
-  filters: Filters
-) {
-  return routes.filter((r) => {
+import { feasibilityDataMap } from "@/app/data/feasibility";
+
+function applyRouteFiltersByFeasibility<
+  T extends { id?: string; feasibilityKey?: string }
+>(routes: T[], filters: { region: string; stage: string }) {
+  return routes.filter((route) => {
+    const key = route.feasibilityKey ?? route.id;
+    if (!key) return false;
+
+    const meta = feasibilityDataMap[key];
+    if (!meta) return false;
+
     const regionOk =
-      filters.region === "all" ||
-      (typeof r.regionId === "string" && r.regionId === filters.region);
+      filters.region === "all" || meta.regionId === filters.region;
 
-    const stageOk =
-      filters.stage === "all" ||
-      (typeof r.stageId === "string" && r.stageId === filters.stage);
+    const stageOk = filters.stage === "all" || meta.stageId === filters.stage;
 
-    // 필터가 all이 아닌데 route에 메타(regionId/stageId)가 없으면 제외되는 게 자연스럽습니다.
     return regionOk && stageOk;
   });
 }
@@ -48,7 +51,7 @@ export default function NaverMap({ filters, onSelectRouteId }: Props) {
   // filters가 바뀌면 매번 새로운 배열을 만들기보다 memo로 안정화
   const filteredRoutes = useMemo(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    () => applyRouteFilters(ROUTES as any[], filters),
+    () => applyRouteFiltersByFeasibility(ROUTES as any[], filters),
     [filters]
   );
 
@@ -90,8 +93,7 @@ export default function NaverMap({ filters, onSelectRouteId }: Props) {
     cleanupRef.current = renderRoutes(
       map,
       naver,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      filteredRoutes as any,
+      filteredRoutes,
       onSelectRouteId
     );
 
