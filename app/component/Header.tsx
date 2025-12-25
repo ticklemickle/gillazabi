@@ -1,18 +1,20 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Header() {
   return (
-    <header className="h-14 flex items-center justify-between px-6 bg-[#0CA678] text-white">
+    <header className="h-14 flex items-center justify-between px-6 bg-white text-black">
       <div className="flex items-center gap-2 font-bold text-lg">
-        <span className="text-[#11a36a] rounded px-2 py-0.5">
+        <Link href="/" className="rounded py-0.5 inline-flex cursor-pointer">
           <Image
-            src="/image/logo/gillazabi_logo.png"
+            src="/image/logo/logo.png"
             alt="길라잡이 로고"
             width={180}
             height={60}
             className="h-8 w-auto"
+            priority
           />
-        </span>
+        </Link>
       </div>
 
       {/* Right: Menu */}

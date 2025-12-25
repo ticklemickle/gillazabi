@@ -159,7 +159,7 @@ export const feasibilityDataMap: Record<string, FeasibilityData> = {
         url: "https://namu.wiki/w/%EC%88%98%EB%8F%84%EA%B6%8C%20%EA%B4%91%EC%97%AD%EA%B8%89%ED%96%89%EC%B2%A0%EB%8F%84%20A%EC%84%A0",
         title: "수도권 광역급행철도 A선",
         thumbnail:
-          "https://i.namu.wiki/i/55GpubC_X5FpeeaVF-PLcntXKCrhgIfiZ-hxJYyNpe7PW9QpeF2XghEg9leaXzPMpOhJjXf0T4Nkeh6SbNDQjnlAbJ8gehYFDBrOilIv_QERPMfHv384xqJUZ-SOmu7G3nyiIqGm1CHEAy_tRN83EA.webp",
+          "https://i.namu.wiki/i/XOLG9WPuVfLpq-I3wuMuUH5DMcqBLEA39rCnFiORjqox40TPk_w31NOA4K0DBIYsuoX4M77SrQlVbVi7fHSCvCpl0fROD8rpiE62a1Eg8ZGJeWfQVkfzN8qn0Kj_rQ9f3khMpMz23se8F-HYZzhO8g.webp",
       },
       {
         url: "https://www.youtube.com/watch?v=Py8gFf5cYbk&pp=ygUFZ3R4LWE%3D",
@@ -235,10 +235,10 @@ export const feasibilityDataMap: Record<string, FeasibilityData> = {
         url: "https://namu.wiki/w/%EC%88%98%EB%8F%84%EA%B6%8C%20%EA%B4%91%EC%97%AD%EA%B8%89%ED%96%89%EC%B2%A0%EB%8F%84%20B%EC%84%A0",
         title: "수도권 광역급행철도 B선",
         thumbnail:
-          "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/...SAMPLE...",
+          "https://i.namu.wiki/i/eElRoDEeSqIzqn0pyAq8BEAGm25CUsStA4FoxmewaFJqB_PjK4bbC7iFygp05md6dU1V_SV3Mo8rJPTuJjzkwujMR9OBHdhOcwQ9cwsZn6u9xiftirqtYEy2vTmGqGu9Pzxzz7YC-JIr6cZ4BXRu6Q.webp",
       },
       {
-        url: "https://www.youtube.com/results?search_query=GTX-B",
+        url: "https://www.youtube.com/watch?v=PwoaF8MTCOQ&pp=ygUFR1RYLUI%3D",
         title: "GTX-B 관련 영상 검색",
       },
     ].map((link) => ({

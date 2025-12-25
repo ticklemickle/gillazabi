@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 type Hero = {
   url: string;
   thumbnail?: string;
@@ -15,13 +17,16 @@ export default function HeroLinks({ heroes }: { heroes?: Hero[] }) {
           href={hero.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="group aspect-[4/3] overflow-hidden rounded-xl bg-neutral-100"
+          className="group relative aspect-[4/3] overflow-hidden rounded-xl bg-neutral-100"
         >
           {hero.thumbnail ? (
-            <img
+            <Image
               src={hero.thumbnail}
-              alt={hero.title ?? ""}
-              className="h-full w-full object-cover transition-transform group-hover:scale-105"
+              alt={hero.title || "hero thumbnail"}
+              fill
+              sizes="(max-width: 768px) 50vw, 33vw"
+              className="object-cover transition-transform group-hover:scale-105"
+              unoptimized
             />
           ) : (
             <div className="flex h-full items-center justify-center text-sm text-neutral-400">

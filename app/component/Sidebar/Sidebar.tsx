@@ -6,6 +6,7 @@ import DetailTable from "./DetailTable";
 import ComplexList from "./ComplexList";
 import { feasibilityDataMap } from "@/app/data/feasibility";
 import Summary from "../Summary";
+import LogoSection from "./LogoSection";
 
 type Props = {
   selectedRouteId: string | null;
@@ -24,6 +25,7 @@ export default function Sidebar({ selectedRouteId }: Props) {
 
   return (
     <div className="w-full max-w-md bg-white">
+      {/* <LogoSection /> */}
       <HeroLinks heroes={d.heroLinks} />
 
       <div className="px-5 pb-8 space-y-6">

@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import MapView from "./MapView";
 import MobileBottomDock from "./MobileBottomDock";
 import Sidebar from "./Sidebar/Sidebar";
+import Header from "./Header";
 
 export default function HomeClient() {
   const [selectedRouteId, setSelectedRouteId] = useState<string | null>(null);
@@ -21,6 +22,7 @@ export default function HomeClient() {
 
   return (
     <div className="h-screen flex flex-col">
+      <Header />
       <main className="flex flex-1 overflow-hidden text-black">
         {/* PC: 기존 Sidebar 유지 */}
         <div
