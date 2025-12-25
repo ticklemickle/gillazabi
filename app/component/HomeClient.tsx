@@ -23,24 +23,33 @@ export default function HomeClient() {
   return (
     <div className="h-screen flex flex-col">
       <Header />
-      <main className="flex flex-1 overflow-hidden text-black">
-        {/* PC: 기존 Sidebar 유지 */}
+
+      <main className="relative flex-1 overflow-hidden text-black">
+        {/* Map: 화면 꽉 */}
+        <section className="absolute inset-0">
+          <MapView onSelectRouteId={setSelectedRouteId} />
+        </section>
+
+        {/* Sidebar: 필요한 만큼만 + 너무 커지면 내부 스크롤 */}
         <div
           ref={sidebarScrollRef}
-          className="hidden md:block w-full max-w-md h-full overflow-y-auto scrollbar-hide"
+          className="
+          hidden md:block
+          absolute left-2 top-2 z-10
+          w-full max-w-md
+          max-h-[calc(100vh-120px)]
+          overflow-y-auto scrollbar-hide
+          rounded-2xl shadow-lg
+        "
         >
           <Sidebar selectedRouteId={selectedRouteId} />
         </div>
 
-        {/* Mobile: 하단 핵심 요약 */}
+        {/* Mobile dock */}
         <MobileBottomDock
           selectedRouteId={selectedRouteId}
           showSummary={false}
         />
-
-        <section className="flex-1">
-          <MapView onSelectRouteId={setSelectedRouteId} />
-        </section>
       </main>
     </div>
   );

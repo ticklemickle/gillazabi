@@ -6,7 +6,7 @@ import DetailTable from "./DetailTable";
 import ComplexList from "./ComplexList";
 import { feasibilityDataMap } from "@/app/data/feasibility";
 import Summary from "../Summary";
-import LogoSection from "./LogoSection";
+import SidebarDefault from "./SidebarDefault";
 
 type Props = {
   selectedRouteId: string | null;
@@ -16,11 +16,7 @@ export default function Sidebar({ selectedRouteId }: Props) {
   const d = selectedRouteId ? feasibilityDataMap[selectedRouteId] : undefined;
 
   if (!d) {
-    return (
-      <div className="w-full max-w-md bg-white px-5 py-6 text-sm text-neutral-500">
-        노선을 선택하면 보고서 요약이 표시됩니다.
-      </div>
-    );
+    return <SidebarDefault onApply={(f) => console.log(f)} />;
   }
 
   return (
